@@ -10,11 +10,9 @@ by Dongryeol Lee, Segwang Kim, Minwoo Lee, Joonsuk Park, Sang-Woo Lee, and Kyomi
 ## Content
 1. [Citation](#citation)
 2. [Dataset Contents](#dataset-contents)
-    * [AmbigNQ format](#ambignq)
-    * [NQ-open format](#nq-open)
-    * [Additional resources](#additional-resources)
-3. [Evaluation script](#evaluation-script)
-4. [Baseline codes](#baseline-codes)
+    * [CAmbigNQ format](#cambignq)
+    * [Relevant-passages](#relevant-passages)
+3. [Baseline codes](#baseline-codes)
 
 ## Citation
 
