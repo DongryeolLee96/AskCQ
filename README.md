@@ -4,7 +4,7 @@ This is the repository documenting the paper
 [Asking Clarification Questions to Handle Ambiguity in Open-Domain QA](https://arxiv.org/abs/2305.13808) (EMNLP 2023)
 by Dongryeol Lee, Segwang Kim, Minwoo Lee, Joonsuk Park, Sang-Woo Lee, and Kyomin Jung.
 
-* Read the [paper](https://arxiv.org/abs/2004.10645)
+* Read the [paper](https://arxiv.org/abs/2305.13808)
 * Download the dataset: (https://drive.google.com/drive/folders/1bujroxJ02ym8SgEmC10IsVnCc8HAwTLH?usp=sharing) 
 
 ## Content
