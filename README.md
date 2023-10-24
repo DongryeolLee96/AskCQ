@@ -1,7 +1,7 @@
 # AskCQ README
 
 This is the repository documenting the paper
-[Asking Clarification Questions to Handle Ambiguity in Open-Domain QA](https://arxiv.org/abs/2305.13808) (EMNLP 2023)
+[Asking Clarification Questions to Handle Ambiguity in Open-Domain QA](https://arxiv.org/abs/2305.13808) (EMNLP 2023-Findings)
 by Dongryeol Lee, Segwang Kim, Minwoo Lee, Joonsuk Park, Sang-Woo Lee, and Kyomin Jung.
 
 * Read the [paper](https://arxiv.org/abs/2305.13808)
