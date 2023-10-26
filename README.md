@@ -2,7 +2,7 @@
 
 This is the repository documenting the paper
 [Asking Clarification Questions to Handle Ambiguity in Open-Domain QA](https://arxiv.org/abs/2305.13808) (EMNLP 2023-Findings)
-by Dongryeol Lee\textsuperscript{*}, Segwang Kim, Minwoo Lee, Joonsuk Park, Sang-Woo Lee, and Kyomin Jung.
+by Dongryeol Lee<sup>* </sup>, Segwang Kim<sup> *</sup>, Minwoo Lee, Joonsuk Park, Sang-Woo Lee, and Kyomin Jung.
 
 ![Clarification Questions example](image/Figure1.png)
 
