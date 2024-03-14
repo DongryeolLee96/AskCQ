@@ -78,6 +78,14 @@ We release top-100 retrieved passages for a given ambiguous question.
 
 Each file contains a list of encoded relevant passages.
 
+### Predicted answer by SPANSEQGEN
+
+We used BART-based model called SPANSEQGEN to predict answers for ambiguous questions.
+
+- pred_MA_prediction.json (10K)
+
+![Overview](image/overview.png)
+
 ## Create conda environment and install requirements
 ```
 conda create -n AskCQ && conda activate AskCQ
@@ -85,14 +93,23 @@ pip install -r requirements.txt
 ```
 
 ## Baseline codes
-### Train your own Clarification Questions generation models
+### Clarification Questions Generation
+### Training 
+| Input in addition to AQ and RPs | CQ   |           | Category |        | Options |        |      |       |
+|---------------------------------|------|-----------|----------|--------|---------|--------|------|-------|
+|                                 | BLEU-4 | BERTSCORE | EM       | BLEU-1 | Prec.    | Rec. | F1   | Avg. # |
+| No Answers for AQ (1)              |  7.9 |      88.9 |     20.2 |   47.3 |    37.4 |   18.2 | 24.5 |   2.0 |
+| Predicted Answers for AQ (2)      |  7.9 |      88.9 |     22.8 |   44.0 |    36.9 |   19.0 | 25.1 |   2.0 |
+| Ground Truth Answers for AQ (3)    | 15.4 |      89.6 |     25.2 |   46.9 |    34.3 |   34.4 | 34.3 |   3.7 |
+
 You can train CQ generation models using "cli.py" as follows.
+
 ```
-python cli.py --do_train --task ${TASK} \
+python cli.py --do_train --task cqg \
     --output_dir ${output_dir} \ # output directory for trained model
     --train_file ${train_file} \ # training data (cq_train.json) 
     --dev_file ${dev_file} \ # dev data (cq_dev.json)
-    --MA_type ${MA_type} \ # Multiple Answers added in input. For "Predicted Answers for AQ" and Ground Truth Answers for AQ" set this parameter to "with_groundtruth_answers". For No Answers for AQ" please set this parameter to "without_answers".
+    --MA_type ${MA_type} \ # Multiple Answers added in input. For No Answers for AQ (1)" please set this parameter to "without_answers". For "Predicted Answers for AQ (2)"  and "Ground Truth Answers for AQ (3)" set this parameter to "with_groundtruth_answers". 
     --bert_name "facebook/bart-large" \
     --discard_not_found_answers \
     --train_batch_size ${train_batch_size} \
@@ -109,10 +126,50 @@ or simply
 bash run_cq_training.sh
 ```
 
-### Train your own Clarification-based QA models
+### Inference
+You can generate CQ using "cli.py" as follows.
+python cli.py --do_predict --task cqg \
+    --train_file ${train_file} \ training data (cq_train.json) 
+    --dev_file ${dev_file} \ dev data (cq_dev.json)
+    --output_dir ${output_dir} \
+    --dpr_data_dir ${data_dir} \
+    --bert_name $bert_name \
+    --discard_not_found_answers \
+    --train_batch_size ${train_batch_size} \
+    --num_train_epochs ${num_train_epochs} \
+    --max_token_nums ${max_token_nums} \
+    --gradient_accumulation_steps ${gradient_accumulation_steps} \
+    --dev_batch_size 8 \
+    --eval_period ${eval_period} \
+    --wait_step 10 --wiki_2020 --max_question_length ${MAX_QUESTION_LENGTH} \
+    --train_passage_dir $train_passage_dir\
+    --dev_passage_dir $dev_passage_dir \
+    --ambigqa \
+    --checkpoint $checkpoint\
+    --checkpoint_folder $checkpoint_folder \
+    --MA_type $MA_type\ # Multiple Answers added in input. For No Answers for AQ (1)" please set this parameter to "without_answers". For "Predicted Answers for AQ (2)"  set this parameter to "with_predicted_answers". For "Ground Truth Answers for AQ (3)" set this parameter to "with_groundtruth_answers".
+    --dq_type pred_cq \ 
+    --verbose \
+    --jobid ${SLURM_JOB_ID}\
+
+for "Predicted Answers for AQ (2)" case, input additional args "--pred_answers_file $pred_answers_file" predicted answers for AQ (pred_MA_prediction.json)
+or simply
+```
+bash run_cq_inference.sh
+```
+
+### Clarification-based QA
+| CQ used to clarify the AQ                         | NQ pretrained BART |      |      |        | CQ finetuned BART |      |      |        |
+|---------------------------------------------------|:------------------:|:----:|:----:|:------:|:-----------------:|:----:|:----:|:------:|
+|                                                   |        Pre.        | Rec. |  F1  | # Ans. |        Pre.       | Rec. |  F1  | # Ans. |
+|      CQ generated with No Answers for AQ (1)      |               47.9 | 25.2 | 33.0 |    1.5 |              54.4 | 31.1 | 39.6 |    1.6 |
+|   CQ generated with Predicted Answers for AQ (2)  |               49.6 | 26.2 | 34.3 |    1.5 |              55.4 | 32.0 | 40.5 |    1.6 |
+| CQ generated with Ground Truth Answers for AQ (3) |               39.7 | 37.5 | 38.6 |    2.0 |              47.5 | 49.5 | 48.5 |    2.5 |
+| Gold CQ                                           |               47.5 | 39.8 | 43.3 |    2.0 |              58.0 | 53.8 | 55.8 |    2.5 |
+
 You can train Clarification-based QA models as follows. 
 ```
-python cli.py --do_train --task ${TASK} \
+python cli.py --do_train --task cqa \
     --train_file ${train_file} \  # training data (cq_train.json) 
     --dev_file ${dev_file} \ # dev data (cq_dev.json)
     --output_dir ${output_dir} \  # output directory for trained model
@@ -128,19 +185,54 @@ python cli.py --do_train --task ${TASK} \
     --train_passage_dir $train_passage_dir\ # training data relevant passage (rel_psg_input_ids_bart_train.pkl)
     --dev_passage_dir $dev_passage_dir \ # dev data relevant passage (rel_psg_input_ids_bart_dev.pkl)
     --verbose \
-    --dq_type $dq_type \ # This parameter decides the type of question used for QA model. Set this parameter to "gold_cq" for training.
-    --checkpoint ${checkpoint}
+    --dq_type $dq_type \ # This parameter decides the type of question used for the QA model. Set this parameter to "gold_cq" for training.
+    --checkpoint ${checkpoint} # We utilized BART-large or NQ pretrained BART-large for checkpoint
 ```
 or simply
 ```
 bash run_cambigqa_train.sh
 ```
 
+You can generate answers predicted by Clarification-based QA models.
+```
+python cli.py --do_predict --task cqa \
+    --train_file ${train_file} \ # training data (cq_train.json) 
+    --dev_file ${dev_file} \ # dev data (cq_dev.json)
+    --output_dir ${output_dir} \ # output directory for predictions
+    --dpr_data_dir ${data_dir} \
+    --bert_name $bert_name \
+    --discard_not_found_answers \
+    --train_batch_size ${train_batch_size} \
+    --num_train_epochs ${num_train_epochs} \
+    --max_token_nums ${max_token_nums} \
+    --gradient_accumulation_steps ${gradient_accumulation_steps} \
+    --dev_batch_size 8 \
+    --eval_period ${eval_period} \
+    --wait_step 10 --wiki_2020 --max_question_length ${MAX_QUESTION_LENGTH} \
+    --train_passage_dir $train_passage_dir\
+    --dev_passage_dir $dev_passage_dir \
+    --ambigqa \
+    --checkpoint $checkpoint\
+    --checkpoint_folder $checkpoint_folder \ # trained Clarification-based QA model directory
+    --MA_type $MA_type\ 
+    --dq_type $dq_type \
+    --verbose \
+    --jobid ${SLURM_JOB_ID}\
+```
+For "CQ generated with No Answers for AQ (1)" case, input "--dq_type pred_cq" and "--MA_type without_answers". 
 
-Instruction for running baseline codes will be available soon!
+For "CQ generated with Predicted Answers for AQ (2)" case, input "--dq_type pred_cq" and "--MA_type with_predicted_answers".
 
-### Inference 
-![Overview](image/overview.png)
+For "CQ generated with Gold Answers for AQ (3)" case, input "--dq_type pred_cq" and "--MA_type with_groundtruth_answers".
+
+For "Gold CQ (4)" case, input input "--dq_type gold_cq" and "--MA_type with_groundtruth_answers".
+
+For (1), (2), and (3), please input additional args "--pred_cq_file" which provides the generated CQ file from the CQ generation task.
+
+or simply
+```
+bash run_cambigqa_inference.sh
+```
 
 
 
