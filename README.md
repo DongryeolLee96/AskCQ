@@ -78,6 +78,10 @@ We release top-100 retrieved passages for a given ambiguous question.
 
 Each file contains a list of encoded relevant passages.
 
+## Create conda environment and install requirements
+conda create -n AskCQ && conda activate AskCQ
+pip install -r requirements.txt
+
 
 ## Baseline codes
 
