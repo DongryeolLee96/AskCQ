@@ -84,15 +84,14 @@ We used BART-based model called SPANSEQGEN to predict answers for ambiguous ques
 
 - pred_MA_prediction.json (10K)
 
-![Overview](image/overview.png)
 
 ## Create conda environment and install requirements
 ```
 conda create -n AskCQ && conda activate AskCQ
 pip install -r requirements.txt
 ```
+![Overview](image/overview.png)
 
-## Baseline codes
 ### Clarification Questions Generation
 ### Training 
 | Input in addition to AQ and RPs | CQ   |           | Category |        | Options |        |      |       |
@@ -128,6 +127,7 @@ bash run_cq_training.sh
 
 ### Inference
 You can generate CQ using "cli.py" as follows.
+```
 python cli.py --do_predict --task cqg \
     --train_file ${train_file} \ training data (cq_train.json) 
     --dev_file ${dev_file} \ dev data (cq_dev.json)
@@ -151,8 +151,11 @@ python cli.py --do_predict --task cqg \
     --dq_type pred_cq \ 
     --verbose \
     --jobid ${SLURM_JOB_ID}\
+```
 
 for "Predicted Answers for AQ (2)" case, input additional args "--pred_answers_file $pred_answers_file" predicted answers for AQ (pred_MA_prediction.json)
+
+
 or simply
 ```
 bash run_cq_inference.sh
