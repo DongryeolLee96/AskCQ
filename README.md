@@ -20,10 +20,11 @@ by Dongryeol Lee<sup>* </sup>, Segwang Kim<sup> *</sup>, Minwoo Lee, Joonsuk Par
 
 If you find the our task or CAmbigNQ dataset useful, please cite our paper:
 ```
-@article{lee2023asking,
+@inproceedings{lee2023asking,
   title={Asking Clarification Questions to Handle Ambiguity in Open-Domain QA},
   author={Lee, Dongryeol and Kim, Segwang and Lee, Minwoo and Lee, Hwanhee and Park, Joonsuk and Lee, Sang-Woo and Jung, Kyomin},
-  journal={arXiv preprint arXiv:2305.13808},
+  booktitle={Findings of the Association for Computational Linguistics: EMNLP 2023},
+  pages={11526--11544},
   year={2023}
 }
 ```
