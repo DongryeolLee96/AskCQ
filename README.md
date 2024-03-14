@@ -79,14 +79,67 @@ We release top-100 retrieved passages for a given ambiguous question.
 Each file contains a list of encoded relevant passages.
 
 ## Create conda environment and install requirements
+```
 conda create -n AskCQ && conda activate AskCQ
 pip install -r requirements.txt
-
+```
 
 ## Baseline codes
+### Train your own Clarification Questions generation models
+You can train CQ generation models using "cli.py" as follows.
+```
+python cli.py --do_train --task ${TASK} \
+    --output_dir ${output_dir} \ # output directory for trained model
+    --train_file ${train_file} \ # training data (cq_train.json) 
+    --dev_file ${dev_file} \ # dev data (cq_dev.json)
+    --MA_type ${MA_type} \ # Multiple Answers added in input. For "Predicted Answers for AQ" and Ground Truth Answers for AQ" set this parameter to "with_groundtruth_answers". For No Answers for AQ" please set this parameter to "without_answers".
+    --bert_name "facebook/bart-large" \
+    --discard_not_found_answers \
+    --train_batch_size ${train_batch_size} \
+    --num_train_epochs ${num_train_epochs} \
+    --max_token_nums ${max_token_nums} \
+    --gradient_accumulation_steps ${gradient_accumulation_steps} \
+    --dev_batch_size 8 \
+    --eval_period ${eval_period} --wait_step 10 --wiki_2020 --max_question_length ${MAX_QUESTION_LENGTH} \
+    --train_passage_dir $train_passage_dir\ # training data relevant passage (rel_psg_input_ids_bart_train.pkl)
+    --dev_passage_dir $dev_passage_dir \ # dev data relevant passage (rel_psg_input_ids_bart_dev.pkl)
+```
+or simply 
+```
+bash run_cq_training.sh
+```
+
+### Train your own Clarification-based QA models
+You can train Clarification-based QA models as follows. 
+```
+python cli.py --do_train --task ${TASK} \
+    --train_file ${train_file} \  # training data (cq_train.json) 
+    --dev_file ${dev_file} \ # dev data (cq_dev.json)
+    --output_dir ${output_dir} \  # output directory for trained model
+    --bert_name $bert_name \
+    --discard_not_found_answers \
+    --train_batch_size ${train_batch_size} \
+    --num_train_epochs ${num_train_epochs} \
+    --max_token_nums ${max_token_nums} \
+    --gradient_accumulation_steps ${gradient_accumulation_steps} \
+    --dev_batch_size 8 \
+    --eval_period ${eval_period} \
+    --wait_step 10 --wiki_2020 --max_question_length ${MAX_QUESTION_LENGTH} \
+    --train_passage_dir $train_passage_dir\ # training data relevant passage (rel_psg_input_ids_bart_train.pkl)
+    --dev_passage_dir $dev_passage_dir \ # dev data relevant passage (rel_psg_input_ids_bart_dev.pkl)
+    --verbose \
+    --dq_type $dq_type \ # This parameter decides the type of question used for QA model. Set this parameter to "gold_cq" for training.
+    --checkpoint ${checkpoint}
+```
+or simply
+```
+bash run_cambigqa_train.sh
+```
+
 
 Instruction for running baseline codes will be available soon!
 
+### Inference 
 ![Overview](image/overview.png)
 
 
