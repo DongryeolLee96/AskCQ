@@ -120,7 +120,7 @@ python cli.py --do_train --task cqg \
     --train_passage_dir $train_passage_dir\ # training data relevant passage (rel_psg_input_ids_bart_train.pkl)
     --dev_passage_dir $dev_passage_dir \ # dev data relevant passage (rel_psg_input_ids_bart_dev.pkl)
 ```
-or simply 
+or simply change parameters in "run_cq_training.sh" file and run
 ```
 bash run_cq_training.sh
 ```
@@ -153,10 +153,10 @@ python cli.py --do_predict --task cqg \
     --jobid ${SLURM_JOB_ID}\
 ```
 
-for "Predicted Answers for AQ (2)" case, input additional args "--pred_answers_file $pred_answers_file" predicted answers for AQ (pred_MA_prediction.json)
+For **"Predicted Answers for AQ (2)" case**, provide additional args "--pred_answers_file $pred_answers_file", which is the directory for the multiple answers prediction file (pred_MA_prediction.json).
 
 
-or simply
+or simply change parameters in "run_cq_inference.sh" file and run
 ```
 bash run_cq_inference.sh
 ```
@@ -191,12 +191,12 @@ python cli.py --do_train --task cqa \
     --dq_type $dq_type \ # This parameter decides the type of question used for the QA model. Set this parameter to "gold_cq" for training.
     --checkpoint ${checkpoint} # We utilized BART-large or NQ pretrained BART-large for checkpoint
 ```
-or simply
+or simply change parameters in "run_cambigqa_train.sh" file and run
 ```
 bash run_cambigqa_train.sh
 ```
 
-You can generate answers predicted by Clarification-based QA models.
+You can predict answers by Clarification-based QA models.
 ```
 python cli.py --do_predict --task cqa \
     --train_file ${train_file} \ # training data (cq_train.json) 
@@ -222,17 +222,17 @@ python cli.py --do_predict --task cqa \
     --verbose \
     --jobid ${SLURM_JOB_ID}\
 ```
-For "CQ generated with No Answers for AQ (1)" case, input "--dq_type pred_cq" and "--MA_type without_answers". 
+**(1) For "CQ generated with No Answers for AQ (1)" case**, input "--dq_type pred_cq" and "--MA_type without_answers". 
 
-For "CQ generated with Predicted Answers for AQ (2)" case, input "--dq_type pred_cq" and "--MA_type with_predicted_answers".
+**(2) For "CQ generated with Predicted Answers for AQ (2)" case**, input "--dq_type pred_cq" and "--MA_type with_predicted_answers".
 
-For "CQ generated with Gold Answers for AQ (3)" case, input "--dq_type pred_cq" and "--MA_type with_groundtruth_answers".
+**(3) For "CQ generated with Gold Answers for AQ (3)" case**, input "--dq_type pred_cq" and "--MA_type with_groundtruth_answers".
 
-For "Gold CQ (4)" case, input input "--dq_type gold_cq" and "--MA_type with_groundtruth_answers".
+**(4) For "Gold CQ (4)" case**, input input "--dq_type gold_cq" and "--MA_type with_groundtruth_answers".
 
-For (1), (2), and (3), please input additional args "--pred_cq_file" which provides the generated CQ file from the CQ generation task.
+**For (1), (2), and (3)**, please provide additional args "--pred_cq_file" which is the directory of the generated CQ file from the CQ generation task.
 
-or simply
+or simply change parameters in "run_cambigqa_inference.sh" file and run
 ```
 bash run_cambigqa_inference.sh
 ```
