@@ -6,7 +6,7 @@ by Dongryeol Lee<sup>* </sup>, Segwang Kim<sup> *</sup>, Minwoo Lee, Joonsuk Par
 
 ![Clarification Questions example](image/Figure1.png)
 
-* Read the [paper](https://arxiv.org/abs/2305.13808)
+* Read the [paper](https://aclanthology.org/2023.findings-emnlp.772/)
 * Download the dataset: (https://drive.google.com/drive/folders/1bujroxJ02ym8SgEmC10IsVnCc8HAwTLH?usp=sharing) 
 
 ## Content
